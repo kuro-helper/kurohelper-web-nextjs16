@@ -18,14 +18,23 @@ import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Link from 'next/link';
+import Divider from '@mui/material/Divider';
+import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import Tooltip from '@mui/material/Tooltip';
+import { useThemeMode } from '@/app/components/ThemeModeContext';
+
+const NAV_ITEMS = [
+  { href: '/', label: '首頁' },
+  { href: '/game/1001', label: '遊戲詳情範例' },
+] as const;
 
 export default function AppBarWithDrawer() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = React.useState(false);
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
-
-  const toggleDrawer = (state: boolean) => () => setDrawerOpen(state);
+  const { mode, toggleMode } = useThemeMode();
 
   const handleLogin = () => {
     setLoginDialogOpen(false);
@@ -35,13 +44,22 @@ export default function AppBarWithDrawer() {
   return (
     <>
       {/* AppBar */}
-      <AppBar position="fixed">
-        <Toolbar>
+      <AppBar
+        position="fixed"
+        color="transparent"
+        elevation={0}
+        sx={{
+          backdropFilter: 'blur(10px)',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
+        <Toolbar sx={{ minHeight: 64 }}>
           <IconButton
             color="inherit"
             aria-label="menu"
             edge="start"
-            onClick={toggleDrawer(true)}
+            onClick={() => setDrawerOpen(true)}
             sx={{ mr: 2 }}
           >
             <MenuIcon />
@@ -50,6 +68,24 @@ export default function AppBarWithDrawer() {
             KuroHelper
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
+          <Tooltip title={mode === 'dark' ? '切換淺色模式' : '切換深色模式'}>
+            <IconButton
+              color="inherit"
+              onClick={toggleMode}
+              sx={{
+                mr: 1,
+                border: '1px solid',
+                borderColor: 'divider',
+                width: 36,
+                height: 36,
+              }}
+            >
+              {mode === 'dark' ? <LightModeRoundedIcon fontSize="small" /> : <DarkModeRoundedIcon fontSize="small" />}
+            </IconButton>
+          </Tooltip>
+          <Button color="inherit" component={Link} href="/game/1001" sx={{ mr: 1 }}>
+            遊戲頁展示
+          </Button>
           <Button color="inherit" onClick={() => setLoginDialogOpen(true)}>
             登入
           </Button>
@@ -60,7 +96,7 @@ export default function AppBarWithDrawer() {
       <Drawer
         anchor="left"
         open={drawerOpen}
-        onClose={toggleDrawer(false)}
+        onClose={() => setDrawerOpen(false)}
         slotProps={{
           paper: {
             sx: {
@@ -69,12 +105,21 @@ export default function AppBarWithDrawer() {
           },
         }}
       >
+        <Box sx={{ p: 2 }}>
+          <Typography variant="h6">KuroHelper</Typography>
+          <Typography variant="body2" color="text.secondary">
+            快速導覽
+          </Typography>
+        </Box>
+        <Divider />
         <List>
-          <ListItem disablePadding>
-            <ListItemButton component={Link} href="/" onClick={toggleDrawer(false)}>
-              <ListItemText primary="首頁" />
-            </ListItemButton>
-          </ListItem>
+          {NAV_ITEMS.map((item) => (
+            <ListItem key={item.href} disablePadding>
+              <ListItemButton component={Link} href={item.href} onClick={() => setDrawerOpen(false)}>
+                <ListItemText primary={item.label} />
+              </ListItemButton>
+            </ListItem>
+          ))}
         </List>
       </Drawer>
 
