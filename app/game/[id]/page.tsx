@@ -1,6 +1,3 @@
-'use client';
-
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -42,9 +39,8 @@ const FALLBACK_DATA: Omit<GameDetail, 'id'> = {
     'This is defalut information.',
 };
 
-export default function GameDetailPage({ params }: PageProps) {
-  const resolvedParams = React.use(params);
-  const { id } = resolvedParams;
+export default async function GameDetailPage({ params }: PageProps) {
+  const { id } = await params;
   const game: GameDetail = {
     id,
     ...FALLBACK_DATA,
