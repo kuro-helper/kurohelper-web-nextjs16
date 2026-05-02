@@ -27,6 +27,7 @@ import { useThemeMode } from '@/app/components/ThemeModeContext';
 const NAV_ITEMS = [
   { href: '/', label: '首頁' },
   { href: '/game/1001', label: '遊戲詳情範例' },
+  { href: '/user', label: '使用者資料' },
 ] as const;
 
 export default function AppBarWithDrawer() {
@@ -64,7 +65,12 @@ export default function AppBarWithDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 0 }}>
+          <Typography
+            variant="h6"
+            component={Link}
+            href="/"
+            sx={{ flexGrow: 0, textDecoration: 'none', color: 'inherit' }}
+          >
             KuroHelper
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
